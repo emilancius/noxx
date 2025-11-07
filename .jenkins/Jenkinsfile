@@ -42,7 +42,7 @@ pipeline {
                     names.each {
                         def jar = "${path}/${it}/target/${it}-${version}.jar"
                         def pom = "${path}/${it}/pom.xml"
-                        def exists = sh script: "[-f ${jar}] && echo 'TRUE' || echo 'FALSE'", returnStdout: true
+                        def exists = sh script: "[ -f ${jar} ] && echo 'TRUE' || echo 'FALSE'", returnStdout: true
                         if (exists.trim() == 'TRUE') {
                             echo "Found jar to publish: ${jar}"
                             artifacts << [artifactId: it, classifier: '', file: jar, type: 'jar']
@@ -50,6 +50,7 @@ pipeline {
                         }
                     }
                     if (!artifacts.isEmpty()) {
+                        echo "Publishing ${artifacts}"
                         nexusArtifactUploader(
                                 nexusVersion: NEXUS_VERSION,
                                 protocol: NEXUS_PROTOCOL,
