@@ -181,6 +181,13 @@
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>${jacoco-maven-plugin.version}</version>
+                <configuration>
+                    <excludes>
+                        <exclude>com/nerosec/noxx/commons/persistence/entity/BaseEntity.*</exclude>
+                        <exclude>com/nerosec/noxx/commons/persistence/entity/BaseEntity_.*</exclude>
+                        <exclude>com/nerosec/noxx/commons/persistence/repository/BaseRepository.*</exclude>
+                    </excludes>
+                </configuration>
                 <executions>
                     <execution>
                         <goals>
