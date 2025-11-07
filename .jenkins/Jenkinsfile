@@ -47,6 +47,11 @@ pipeline {
                 sh "mvn ${MAVEN_ARG_MAVEN_REPO_LOCAL} test"
             }
         }
+//        stage('STATIC ANALYSIS') {
+//            steps {
+//                // TODO
+//            }
+//        }
         stage('PUBLISH') {
             steps {
                 script {
