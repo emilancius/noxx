@@ -13,6 +13,9 @@
     <version>0.0.20251107</version>
     <name>noxx</name>
     <packaging>pom</packaging>
+    <modules>
+        <module>noxx-commons</module>
+    </modules>
     <properties>
         <!-- Dependency versions: -->
         <kotlin.version>2.2.21</kotlin.version>
@@ -43,6 +46,15 @@
             <url>https://repository.nerosec.com/repository/maven-nexus-repo/</url>
         </repository>
     </repositories>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.nerosec</groupId>
+                <artifactId>noxx-commons</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
     <dependencies>
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
