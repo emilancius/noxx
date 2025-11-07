@@ -34,10 +34,10 @@ pipeline {
         stage('PUBLISH') {
             steps {
                 script {
-                    def path = "${env.WORKSPACE}/nerosec/noxx"
+                    def path = "${env.WORKSPACE}"
                     def names = ['noxx-commons']
-                    def groupId = sh script: 'mvn help:evaluate ${MAVEN_ARG_MAVEN_REPO_LOCAL} -Dexpression=project.groupId -q -DforceStdout'
-                    def version = sh script: 'mvn help:evaluate ${MAVEN_ARG_MAVEN_REPO_LOCAL} -Dexpression=project.version -q -DforceStdout'
+                    def groupId = sh script: 'mvn help:evaluate ${MAVEN_ARG_MAVEN_REPO_LOCAL} -Dexpression=project.groupId -q -DforceStdout', returnStdout: true
+                    def version = sh script: 'mvn help:evaluate ${MAVEN_ARG_MAVEN_REPO_LOCAL} -Dexpression=project.version -q -DforceStdout', returnStdout: true
                     def artifacts = []
                     names.each {
                         def jar = "${path}/${it}/target/${it}-${version}.jar"
