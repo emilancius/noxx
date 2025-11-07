@@ -40,7 +40,7 @@
         <repository>
             <id>nerosec</id>
             <name>nerosec repository</name>
-            <url>https://repository.nerosec.com/repository/maven-releases/</url>
+            <url>https://repository.nerosec.com/repository/maven-nexus-repo/</url>
         </repository>
     </repositories>
     <dependencies>

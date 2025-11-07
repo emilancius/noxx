@@ -1,0 +1,44 @@
+pipeline {
+    agent {
+        label 'master'
+    }
+    tools {
+        maven 'Maven 3.9.11'
+        jdk 'GVM 25'
+    }
+    environment {
+        // maven
+        LOCAL_REPOSITORY_LOCATION = '/var/jenkins_home/.m2/repository'
+        MAVEN_ARG_MAVEN_REPO_LOCAL = "-Dmaven.repo.local=${LOCAL_REPOSITORY_LOCATION}"
+        // nexus
+        NEXUS_VERSION = 'nexus3'
+        NEXUS_PROTOCOL = 'https'
+        NEXUS_URL = 'repository.nerosec.com'
+        NEXUS_REPOSITORY = 'maven-nexus-repo'
+        NEXUS_CREDENTIAL_ID = 'nexus-user'
+    }
+    stages {
+        stage('GIT CLONE') {
+            steps {
+                git url: 'https://github.com/emilancius/noxx.git', branch: 'master'
+            }
+        }
+        stage('BUILD') {
+            steps {
+                sh "mvn ${MAVEN_ARG_MAVEN_REPO_LOCAL} -DskipTests clean install"
+            }
+        }
+        stage('TEST') {
+            steps {
+                sh "mvn ${MAVEN_ARG_MAVEN_REPO_LOCAL} test"
+            }
+        }
+        stage('PUBLISH') {
+            steps {
+                script {
+                    // TODO
+                }
+            }
+        }
+    }
+}
