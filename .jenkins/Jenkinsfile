@@ -33,12 +33,12 @@ pipeline {
                 sh "mvn ${MAVEN_ARG_MAVEN_REPO_LOCAL} test"
             }
         }
-        stage('PUBLISH') {
-            steps {
-                script {
-                    // TODO
-                }
-            }
-        }
+//        stage('PUBLISH') {
+//            steps {
+//                script {
+//                    // TODO
+//                }
+//            }
+//        }
     }
 }
