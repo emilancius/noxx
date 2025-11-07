@@ -1,3 +1,17 @@
+enum ArtifactType {
+    jar,
+    pom
+}
+
+def exists(String path) {
+    String exists = sh script: "[ -f ${path} ] && echo 'TRUE' || echo 'FALSE'", returnStdout: true
+    return exists.trim() == 'TRUE'
+}
+
+static def createArtifact(String id, ArtifactType type, String path) {
+    return [artifactId: id, classifier: '', type: type.name(), file: path]
+}
+
 pipeline {
     agent any
     tools {
@@ -8,6 +22,8 @@ pipeline {
         // maven
         LOCAL_REPOSITORY_LOCATION = '/var/jenkins_home/.m2/repository'
         MAVEN_ARG_MAVEN_REPO_LOCAL = "-Dmaven.repo.local=${LOCAL_REPOSITORY_LOCATION}"
+        MAVEN_ARG_EXPRESSION_GROUP_ID = "-Dexpression=project.groupId"
+        MAVEN_ARG_EXPRESSION_VERSION = "-Dexpression=project.version"
         // nexus
         NEXUS_VERSION = 'nexus3'
         NEXUS_PROTOCOL = 'https'
@@ -34,23 +50,20 @@ pipeline {
         stage('PUBLISH') {
             steps {
                 script {
-                    def path = "${env.WORKSPACE}"
+                    def directory = "${env.WORKSPACE}"
                     def names = ['noxx-commons']
-                    def groupId = sh script: 'mvn help:evaluate ${MAVEN_ARG_MAVEN_REPO_LOCAL} -Dexpression=project.groupId -q -DforceStdout', returnStdout: true
-                    def version = sh script: 'mvn help:evaluate ${MAVEN_ARG_MAVEN_REPO_LOCAL} -Dexpression=project.version -q -DforceStdout', returnStdout: true
+                    def groupId = sh script: "mvn help:evaluate ${MAVEN_ARG_MAVEN_REPO_LOCAL} ${MAVEN_ARG_EXPRESSION_GROUP_ID} -q -DforceStdout", returnStdout: true
+                    def version = sh script: "mvn help:evaluate ${MAVEN_ARG_MAVEN_REPO_LOCAL} ${MAVEN_ARG_EXPRESSION_VERSION} -q -DforceStdout", returnStdout: true
                     def artifacts = []
-                    names.each {
-                        def jar = "${path}/${it}/target/${it}-${version}.jar"
-                        def pom = "${path}/${it}/pom.xml"
-                        def exists = sh script: "[ -f ${jar} ] && echo 'TRUE' || echo 'FALSE'", returnStdout: true
-                        if (exists.trim() == 'TRUE') {
-                            echo "Found jar to publish: ${jar}"
-                            artifacts << [artifactId: it, classifier: '', file: jar, type: 'jar']
-                            artifacts << [artifactId: it, classifier: '', file: pom, type: 'pom']
+                    names.each { name ->
+                        def path = "${directory}/${name}"
+                        def jar = "${path}/target/${name}-${version}.jar"
+                        if (exists(jar)) {
+                            artifacts << createArtifact(name, ArtifactType.jar, jar)
+                            artifacts << createArtifact(name, ArtifactType.pom, "${path}/pom.xml")
                         }
                     }
                     if (!artifacts.isEmpty()) {
-                        echo "Publishing ${artifacts}"
                         nexusArtifactUploader(
                                 nexusVersion: NEXUS_VERSION,
                                 protocol: NEXUS_PROTOCOL,
