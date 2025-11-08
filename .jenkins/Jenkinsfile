@@ -44,6 +44,10 @@ pipeline {
         stage('TEST') {
             steps {
                 sh "mvn ${MAVEN_ARG_MAVEN_REPO_LOCAL} test"
+            }
+        }
+        stage('CODE TEST COVERAGE ANALYSIS') {
+            steps {
                 script {
                     def qualityGates = []
                     qualityGates << createQualityGate('LINE', 90.0)
