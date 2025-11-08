@@ -15,6 +15,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>noxx-commons</module>
+        <module>noxx-service</module>
     </modules>
     <properties>
         <!-- Dependency versions: -->
@@ -188,6 +189,7 @@
                         <exclude>com/nerosec/noxx/commons/persistence/repository/BaseRepository.class</exclude>
                         <exclude>com/nerosec/noxx/commons/exceptions/*</exclude>
                         <exclude>com/nerosec/noxx/commons/service/*</exclude>
+                        <exclude>com/nerosec/noxx/service/ServiceApplication*</exclude>
                     </excludes>
                 </configuration>
                 <executions>
