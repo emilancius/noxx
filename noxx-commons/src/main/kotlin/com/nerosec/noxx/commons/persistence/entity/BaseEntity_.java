@@ -8,6 +8,10 @@ import java.time.Instant;
 @StaticMetamodel(BaseEntity.class)
 public abstract class BaseEntity_ {
 
+    private BaseEntity_() {
+        super();
+    }
+
     public static final String PROP_ID = "id";
     public static final String PROP_ETAG = "etag";
     public static final String PROP_CREATED_AT = "created";
