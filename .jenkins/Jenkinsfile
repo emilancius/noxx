@@ -44,16 +44,18 @@ pipeline {
         stage('TEST') {
             steps {
                 sh "mvn ${MAVEN_ARG_MAVEN_REPO_LOCAL} test"
-                def qualityGates = []
-                qualityGates << createQualityGate('LINE', 90.0)
-                qualityGates << createQualityGate('BRANCH', 60.0)
-                recordCoverage(
-                        tools: [[parser: 'JACOCO']],
-                        id: 'jacoco',
-                        name: 'JaCoCo coverage',
-                        sourceCodeRetention: 'EVERY_BUILD',
-                        qualityGates: qualityGates
-                )
+                script {
+                    def qualityGates = []
+                    qualityGates << createQualityGate('LINE', 90.0)
+                    qualityGates << createQualityGate('BRANCH', 60.0)
+                    recordCoverage(
+                            tools: [[parser: 'JACOCO']],
+                            id: 'jacoco',
+                            name: 'JaCoCo coverage',
+                            sourceCodeRetention: 'EVERY_BUILD',
+                            qualityGates: qualityGates
+                    )
+                }
             }
         }
 //        stage('STATIC ANALYSIS') {
