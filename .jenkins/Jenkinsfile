@@ -1,24 +1,14 @@
-enum ArtifactType {
-    jar,
-    pom
-}
-
-enum CoverageMetricType {
-    LINE,
-    BRANCH
-}
-
 def exists(String path) {
     String exists = sh script: "[ -f ${path} ] && echo 'TRUE' || echo 'FALSE'", returnStdout: true
     return exists.trim() == 'TRUE'
 }
 
-static def createArtifact(String id, ArtifactType type, String path) {
-    return [artifactId: id, classifier: '', type: type.name(), file: path]
+static def createArtifact(String id, String type, String path) {
+    return [artifactId: id, classifier: '', type: type, file: path]
 }
 
-static def createQualityGate(CoverageMetricType metric, double threshold) {
-    return [threshold: threshold, metric: metric.name(), baseline: 'PROJECT', unstable: true]
+static def createQualityGate(String metric, double coverageRequired) {
+    return [threshold: coverageRequired, metric: metric, baseline: 'PROJECT', unstable: true]
 }
 
 pipeline {
@@ -54,15 +44,15 @@ pipeline {
         stage('TEST') {
             steps {
                 sh "mvn ${MAVEN_ARG_MAVEN_REPO_LOCAL} test"
+                def qualityGates = []
+                qualityGates << createQualityGate('LINE', 90.0)
+                qualityGates << createQualityGate('BRANCH', 60.0)
                 recordCoverage(
                         tools: [[parser: 'JACOCO']],
                         id: 'jacoco',
                         name: 'JaCoCo coverage',
                         sourceCodeRetention: 'EVERY_BUILD',
-                        qualityGates: [
-                                createQualityGate(CoverageMetricType.LINE, 90.0),
-                                createQualityGate(CoverageMetricType.BRANCH, 60.0)
-                        ]
+                        qualityGates: qualityGates
                 )
             }
         }
@@ -83,8 +73,8 @@ pipeline {
                         def path = "${directory}/${name}"
                         def jar = "${path}/target/${name}-${version}.jar"
                         if (exists(jar)) {
-                            artifacts << createArtifact(name, ArtifactType.jar, jar)
-                            artifacts << createArtifact(name, ArtifactType.pom, "${path}/pom.xml")
+                            artifacts << createArtifact(name, 'jar', jar)
+                            artifacts << createArtifact(name, 'pom', "${path}/pom.xml")
                         }
                     }
                     if (!artifacts.isEmpty()) {
