@@ -5,11 +5,11 @@ import com.nerosec.noxx.commons.exceptions.StateException
 
 object Preconditions {
 
-    fun require(condition: Boolean, exception: Exception) {
-        if (!condition) throw exception
+    fun require(condition: () -> Boolean, exception: Exception) {
+        if (!condition.invoke()) throw exception
     }
 
-    fun requireArgument(condition: Boolean, message: (() -> String?)? = null) = require(condition, ArgumentException(message?.invoke()))
+    fun requireArgument(condition: () -> Boolean, message: (() -> String?)? = null) = require(condition, ArgumentException(message?.invoke()))
 
-    fun requireState(condition: Boolean, message: (() -> String?)? = null) = require(condition, StateException(message?.invoke()))
+    fun requireState(condition: () -> Boolean, message: (() -> String?)? = null) = require(condition, StateException(message?.invoke()))
 }

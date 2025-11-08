@@ -13,45 +13,64 @@ import org.junit.jupiter.api.assertThrows
 class PreconditionsSpec {
 
     companion object {
-        private const val TEST_ERROR_MESSAGE = "<ERROR_MESSAGE>"
+        private const val TEST_ERROR_MESSAGE = "<error_message>"
     }
 
     @Test
     fun `require - produces specified exception if condition is not met`() {
-        var exception = assertThrows<Exception> { require(false, Exception(TEST_ERROR_MESSAGE)) }
+        var exception = assertThrows<Exception> {
+            require(createCondition(ConditionType.FAILING), Exception(TEST_ERROR_MESSAGE))
+        }
         assertEquals(TEST_ERROR_MESSAGE, exception.message)
-        exception = assertThrows<Exception> { require(false, Exception()) }
-        assertTrue(exception.message == null)
+        assertTrue { exception.cause == null }
+
+        exception = assertThrows<Exception> { require(createCondition(ConditionType.FAILING), Exception()) }
+        assertTrue { exception.message == null }
     }
 
     @Test
     fun `require - exception is not produced if precondition is met`() {
-        require(true, Exception(TEST_ERROR_MESSAGE))
+        require(createCondition(ConditionType.SUCCEEDING), Exception(TEST_ERROR_MESSAGE))
     }
 
     @Test
     fun `requireArgument - produces ArgumentException if condition is not met`() {
-        var exception = assertThrows<ArgumentException> { requireArgument(false) { TEST_ERROR_MESSAGE } }
+        var exception = assertThrows<ArgumentException> {
+            requireArgument(createCondition(ConditionType.FAILING)) { TEST_ERROR_MESSAGE }
+        }
         assertEquals(TEST_ERROR_MESSAGE, exception.message)
-        exception = assertThrows<ArgumentException> { requireArgument(false) }
+        assertTrue { exception.cause == null }
+
+        exception = assertThrows<ArgumentException> { requireArgument(createCondition(ConditionType.FAILING)) }
         assertTrue(exception.message == null)
     }
 
     @Test
     fun `requireArgument - exception is not produced if precondition is met`() {
-        requireArgument(true) { TEST_ERROR_MESSAGE }
+        requireArgument(createCondition(ConditionType.SUCCEEDING)) { TEST_ERROR_MESSAGE }
     }
 
     @Test
     fun `requireState - produces StateException if condition is not met`() {
-        var exception = assertThrows<StateException> { requireState(false) { TEST_ERROR_MESSAGE } }
+        var exception = assertThrows<StateException> {
+            requireState(createCondition(ConditionType.FAILING)) { TEST_ERROR_MESSAGE }
+        }
         assertEquals(TEST_ERROR_MESSAGE, exception.message)
-        exception = assertThrows<StateException> { requireState(false) }
+        assertTrue { exception.cause == null }
+
+        exception = assertThrows<StateException> { requireState(createCondition(ConditionType.FAILING)) }
         assertTrue(exception.message == null)
     }
 
     @Test
     fun `requireState - exception is not produced if precondition is not met`() {
-        requireState(true) { TEST_ERROR_MESSAGE }
+        requireState(createCondition(ConditionType.SUCCEEDING)) { TEST_ERROR_MESSAGE }
     }
+
+    private enum class ConditionType {
+        SUCCEEDING,
+        FAILING
+    }
+
+    private fun createCondition(type: ConditionType): Function0<Boolean> = { type == ConditionType.SUCCEEDING }
 }

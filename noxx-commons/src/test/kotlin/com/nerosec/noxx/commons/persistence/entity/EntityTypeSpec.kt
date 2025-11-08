@@ -9,8 +9,8 @@ class EntityTypeSpec {
     fun `generateEntityId - generates entity id, based on entity type`() {
         EntityType.entries.forEach {
             val entityId = it.generateEntityId()
-            assertEquals(37 + it.name.length, entityId.length)
-            assertEquals(it.name, entityId.substringBefore('.').replace('-', '_'))
+            assertEquals(it.value, entityId.substringBefore('.'))
+            assertEquals(37 + it.value.length, entityId.length)
         }
     }
 }

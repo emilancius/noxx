@@ -13,6 +13,6 @@ class StringExtensionsSpec {
         EntityType.entries.forEach { entityType ->
             assertTrue { entityType.generateEntityId().isEntityId(entityType) }
         }
-        assertFalse("".isEntityId())
+        assertFalse("<non_entity_id_string>".isEntityId())
     }
 }
