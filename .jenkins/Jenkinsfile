@@ -7,10 +7,6 @@ static def createArtifact(String id, String type, String path) {
     return [artifactId: id, classifier: '', type: type, file: path]
 }
 
-static def createQualityGate(String metric, double coverageRequired) {
-    return [threshold: coverageRequired, metric: metric, baseline: 'PROJECT', unstable: true]
-}
-
 pipeline {
     agent any
     tools {
@@ -49,15 +45,15 @@ pipeline {
         stage('CODE TEST COVERAGE ANALYSIS') {
             steps {
                 script {
-                    def qualityGates = []
-                    qualityGates << createQualityGate('LINE', 90.0)
-                    qualityGates << createQualityGate('BRANCH', 60.0)
                     recordCoverage(
                             tools: [[parser: 'JACOCO']],
                             id: 'jacoco',
                             name: 'JaCoCo coverage',
                             sourceCodeRetention: 'EVERY_BUILD',
-                            qualityGates: qualityGates
+                            qualityGates: [
+                                    [threshold: 90.0, metric: 'LINE', baseline: 'PROJECT', unstable: true],
+                                    [threshold: 60.0, metric: 'BRANCH', baseline: 'PROJECT', unstable: true]
+                            ]
                     )
                 }
             }
