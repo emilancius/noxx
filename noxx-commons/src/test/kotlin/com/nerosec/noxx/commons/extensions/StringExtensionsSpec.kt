@@ -1,4 +1,4 @@
-package com.nerosec.noxx.commons.persistence.entity.extensions
+package com.nerosec.noxx.commons.extensions
 
 import com.nerosec.noxx.commons.extensions.StringExtensions.isEntityId
 import com.nerosec.noxx.commons.persistence.entity.EntityType

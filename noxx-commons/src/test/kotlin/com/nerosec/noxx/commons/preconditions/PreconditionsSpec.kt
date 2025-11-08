@@ -1,4 +1,4 @@
-package com.nerosec.noxx.commons.persistence.entity.preconditions
+package com.nerosec.noxx.commons.preconditions
 
 import com.nerosec.noxx.commons.exceptions.ArgumentException
 import com.nerosec.noxx.commons.exceptions.StateException
