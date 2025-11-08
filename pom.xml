@@ -185,7 +185,8 @@
                     <excludes>
                         <exclude>com/nerosec/noxx/commons/persistence/entity/BaseEntity.*</exclude>
                         <exclude>com/nerosec/noxx/commons/persistence/entity/BaseEntity_.*</exclude>
-                        <exclude>com/nerosec/noxx/commons/persistence/repository/BaseRepository.*</exclude>
+                        <exclude>com/nerosec/noxx/commons/persistence/repository/BaseRepository.*</exclude>\
+                        <exclude>com/nerosec/noxx/commons/exceptions/*</exclude>
                     </excludes>
                 </configuration>
                 <executions>
