@@ -184,12 +184,16 @@
                 <version>${jacoco-maven-plugin.version}</version>
                 <configuration>
                     <excludes>
+                        <!-- noxx-commons -->
                         <exclude>com/nerosec/noxx/commons/persistence/entity/BaseEntity.class</exclude>
                         <exclude>com/nerosec/noxx/commons/persistence/entity/BaseEntity_.class</exclude>
                         <exclude>com/nerosec/noxx/commons/persistence/repository/BaseRepository.class</exclude>
                         <exclude>com/nerosec/noxx/commons/exceptions/*</exclude>
                         <exclude>com/nerosec/noxx/commons/service/*</exclude>
+                        <!-- noxx-service -->
                         <exclude>com/nerosec/noxx/service/ServiceApplication*</exclude>
+                        <exclude>com/nerosec/noxx/service/persistence/repository/*</exclude>
+                        <exclude>com/nerosec/noxx/service/persistence/entity/*</exclude>
                     </excludes>
                 </configuration>
                 <executions>
